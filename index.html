@@ -1,5 +1,5 @@
-  <!DOCTYPE html>
-<html lang="bn">
+<!DOCTYPE html>
+<html lang="bn" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <title>আমি যেভাবে চুপচাপ ভেঙে পড়েছি</title>
@@ -72,11 +72,42 @@ p{
   box-shadow:0 0 15px rgba(106,169,255,.6);
   cursor:pointer;
 }
+#musicTitle{
+  position:fixed;
+  bottom:65px;
+  right:22px;
+  font-size:12px;
+  color:#bcdcff;
+  opacity:.75;
+  font-style:italic;
+  letter-spacing:.5px;
+}
+#musicTitle{
+  position:fixed;
+  bottom:65px;
+  right:22px;
+  font-size:12px;
+  font-style:italic;
+  letter-spacing:.5px;
+  transition:.4s ease;
+}
+html[data-theme="light"] body{
+  background:#f5f5f5;
+  color:#222;
+}
+
+html[data-theme="light"] .block{
+  background:#ffffff;
+  box-shadow:0 0 30px rgba(0,0,0,.08);
+}
+
 </style>
 </head>
 
 <body>
-
+<button onclick="toggleTheme()" style="position:fixed;bottom:20px;left:20px;">
+🌙 / ☀️
+</button>
 <div class="wrap">
 
 <h1>আমি যেভাবে চুপচাপ ভেঙে পড়েছি</h1>
@@ -278,24 +309,61 @@ Micro Job করেছি।
 ভাঙা অবস্থায়।
 </p>
 </div>
-
-</div>
-
 <!-- Background Music -->
-<audio id="bgMusic" loop>
-  <source src="music.mp3" type="audio/mpeg">
-</audio>
+<audio id="bgMusic"></audio>
 
 <!-- Music Button -->
-<button id="musicBtn" onclick="playMusic()">🎵 Music</button>
+<button id="musicBtn" onclick="toggleMusic()">🎵 Music</button>
+<div id="musicTitle">No music playing</div>
 
 <script>
-function playMusic(){
-  const music = document.getElementById("bgMusic");
-  music.volume = 0.4;
+const playlist = [
+  { src: "music.mp3", title: "Shunno.Tanver Evan" },
+  { src: "Long_Distance_Love.mp3", title: "Long Distance Love" },
+      { src: "Tum_Hi_Ho.mp3", title: "Tum_Hi_Ho" },
+  { src: "Pal_Pal.mp3", title: "Pal Pal Jina" }
+
+];
+
+let currentTrack = 0;
+let isPlaying = false;
+
+const music = document.getElementById("bgMusic");
+const btn = document.getElementById("musicBtn");
+const titleBox = document.getElementById("musicTitle");
+
+music.volume = 0.4;
+
+// পরের গান অটো চালু
+music.addEventListener("ended", () => {
+  currentTrack++;
+  if (currentTrack >= playlist.length) currentTrack = 0;
+  playTrack();
+});
+
+function playTrack(){
+  music.src = playlist[currentTrack].src;
   music.play();
+  titleBox.innerText = "🎧 " + playlist[currentTrack].title;
+  btn.innerText = "⏸ Pause";
+  isPlaying = true;
+}
+
+function toggleMusic(){
+  if (!isPlaying) {
+    playTrack();
+  } else {
+    music.pause();
+    btn.innerText = "🎵 Music";
+    titleBox.innerText = "Paused";
+    isPlaying = false;
+  }
+}
+function toggleTheme(){
+  const html = document.documentElement;
+  html.dataset.theme =
+    html.dataset.theme === "dark" ? "light" : "dark";
 }
 </script>
-
 </body>
   </html>
